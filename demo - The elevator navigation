@@ -1,2 +1,45 @@
 简单电梯导航
   
+效果 ： 页面卷起高度大于一定值时候，电梯导航显示，电梯导航可以实现点击定位对应模块、滚动切换颜色；
+
+功能模块及思路：
+  1. body、html卷起高度大于一定值的时候 导航栏出现
+    第一步  封装函数 
+    function fn () {
+            if ($('html,body').scrollTop() > $('.element ').offset().top) {
+            //fixedtool为电梯导航类名
+                $('.fixedtool').fadeIn();
+            } else {
+                $('.fixedtool').fadeOut();
+            }
+        }
+      第二步  调用函数
+      fn（）;
+     
+  2. 滚动 电梯导航所对应的模块背景颜色改变
+     $(window).scroll(function () {
+     // 调用函数
+            fn();
+            //遍历  选中各个主要跳转的模块
+            $('.floor>div').each(function (i,elm) {
+            //i为索引值  i == $(this).index()  elm 为元素
+                if ($('body,html').scrollTop() >= $(elm).offset().top) {
+                    //排他思想  给予删除类名
+                    $('.fixedtool li').eq(i).addClass('current').siblings().removeClass('current');
+                }
+            });
+        });
+        
+    3.点击电梯导航模块标题，即可跳转至指定的模块位置，同时切换类名
+      $（'。fixedtool li'）。click（function（）{
+            //获取对应的索引值
+            var index = $(this).index();
+
+            var top = $('.floor>div').eq(index).offset().top;
+
+            $('body,html').animate({
+                scrollTop : top
+            },300,function () {
+                $(this).addClass('current').siblings().removeClass('current');
+            });
+        });
